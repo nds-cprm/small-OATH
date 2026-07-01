@@ -23,7 +23,7 @@ oathtool -v --totp=SHA256 -b ` cat .mypass ` > otp
 
 4. select the line with "Current Time:"
 
-cat opt | grep "Current" | cut -d' ' -f 3-5 > lst
+cat otp | grep "Current" | cut -d' ' -f 3-5 > lst
 
 3. confirm on time password
 
