@@ -18,7 +18,7 @@ SERVER="${5:-localhost}"
 MESSAGE="${6:-status}"
 TIMES="`date --iso-8601=seconds`"
 
-echo "namespace: ${EVENT}/${SERVICE}/${SERVER}/${MESSAGE}/${TIMES}/"
+echo "namespace: /${EVENT}/${SERVICE}/${SERVER}/${MESSAGE}/${TIMES}/"
 
 # use a plain server
 
