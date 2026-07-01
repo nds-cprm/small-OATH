@@ -5,7 +5,7 @@ set -e
 
 # Dependencies check
 for cmd in qrencode oathtool; do
-    if ! command -v "$cmd" &> /dev/null; then
+    if [ which "$cmd" &> /dev/null] ; then
         echo "Error: Required command '$cmd' is not installed." >&2
         exit 1
     fi
