@@ -4,8 +4,8 @@
 set -e
 
 # Dependencies check
-for cmd in qrencode oathtool; do
-    if [ which "$cmd" &> /dev/null] ; then
+for cmd in qrencode oathtool jq; do
+    if [ -z `which "$cmd"` ] ; then
         echo "Error: Required command '$cmd' is not installed." >&2
         exit 1
     fi
@@ -24,22 +24,23 @@ show_help() {
 # Default values
 ACCOUNT="user@example.com"
 ISSUER="Google"
+METHOD="SHA256"
 SECRET=""
 
 # Parse arguments
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
     case $1 in
-        -s|--secret) SECRET="${2//[[:space:]]/}"; shift 2 ;; # Strip spaces
-        -a|--account) ACCOUNT="$2"; shift 2 ;;
-        -i|--issuer) ISSUER="$2"; shift 2 ;;
-        -h|--help) show_help; exit 0 ;;
+        -a) ACCOUNT="$2"; shift 2 ;;
+        -i) ISSUER="$2"; shift 2 ;;
+        -s) SECRET="${2//[[:space:]]/}"; shift 2 ;; # Strip spaces
+        -h) show_help; exit 0 ;;
         *) echo "Unknown option: $1"; show_help; exit 1 ;;
     esac
 done
 
 # Validate secret
-if [[ -z "$SECRET" ]]; then
-    echo "Error: Secret key (-s) is required." >&2
+if [ -z "$SECRET" ]; then
+    echo "Error: Secret key (-s) is required."
     show_help
     exit 1
 fi
@@ -48,9 +49,11 @@ fi
 URL_ACCOUNT=$(jq -nr --arg str "$ACCOUNT" '$str | @uri')
 URL_ISSUER=$(jq -nr --arg str "$ISSUER" '$str | @uri')
 URL_SECRET=$(jq -nr --arg str "$SECRET" '$str | @uri')
+URL_METHOD=$(jq -nr --arg str "$METHOD" '$str | @uri')
 
 # Construct Google Authenticator compatible URI
-OTP_URI="otpauth://totp/${URL_ISSUER}:${URL_ACCOUNT}?secret=${URL_SECRET}&issuer=${URL_ISSUER}"
+OTP_URI="otpauth://totp/${URL_ISSUER}:${URL_ACCOUNT}?\
+secret=${URL_SECRET}&issuer=${URL_ISSUER}&algorithm=${URL_METHOD}"
 
 # Output results safely
 echo -e "\n=== CURRENT ACTIVE OTP CODE ==="

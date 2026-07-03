@@ -4,13 +4,19 @@
 #
 # blog: https://fabianlee.org/2022/10/26/linux-socat-used-as-secure-https-web-server/
 #
+#       agsb@2026, changes comments and to call a bash script
+#
 
+#echo all
 set -x
 
+# define domain
 FQDN="${1:-localhost}"
+
+# define port
 PORT="${2:-4433}"
 
-# do a GET with namespace
+#define namespace
 
 EVENT="${3:-4}"
 SERVICE="${4:-beat}"
@@ -26,5 +32,7 @@ echo "namespace: ${NAMESPACE}"
 
 # use a plain server
 
-curl -4 -v http://${FQDN}:${PORT}/${NAMESPACE}/
+# do a GET with namespace
+
+curl -4 -v --http0.9 http://${FQDN}:${PORT}/${NAMESPACE}/
 
