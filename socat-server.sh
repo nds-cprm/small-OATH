@@ -8,7 +8,7 @@
 #
 
 # echo all
-set -x
+set -e
 
 # define domain
 FQDN="${1:-localhost}"
@@ -18,5 +18,5 @@ PORT="${2:-4433}"
 
 # a plain HTTP server
 
-socat -4 -v -ls -lh TCP-LISTEN:${PORT},reuseaddr,fork,crlf SYSTEM:./server.sh,stderr
+socat -4 -ls -lh TCP-LISTEN:${PORT},reuseaddr,fork,crlf SYSTEM:./server.sh,stderr
 

@@ -8,7 +8,9 @@
 #
 
 #echo all
-set -x
+set -e
+
+PASS_FILE="./pass.lst"
 
 # define domain
 FQDN="${1:-localhost}"
@@ -16,14 +18,24 @@ FQDN="${1:-localhost}"
 # define port
 PORT="${2:-4433}"
 
-#define namespace
+# define namespace
 
-EVENT="${3:-4}"
-SERVICE="${4:-beat}"
-SERVER="${5:-localhost}"
-MESSAGE="${6:-status}"
+# pretend a event
+
+EVENT="`shuf -i 0-12 -n 1`"
+
+SERVICE="beat"
+
+SERVER="`shuf -i 1-6 -n 1`"
+
+SERVER="host${SERVER}"
+
+MESSAGE="status"
+
 TIMES="`date --iso-8601=seconds`"
-MYPASS="`cat .mypass`"
+
+MYPASS="`grep $SERVER $PASS_FILE | cut -d':' -f 2`"
+
 OATH="`oathtool --totp=SHA256 -b ${MYPASS}`"
 
 NAMESPACE="/${EVENT}/${SERVICE}/${SERVER}/${MESSAGE}/${TIMES}/${OATH}/"

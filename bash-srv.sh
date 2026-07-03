@@ -23,12 +23,16 @@ done
 # Log to both stdout and file
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 LOG_ENTRY="$TIMESTAMP $SOCAT_PEERADDR:$SOCAT_PEERPORT $METHOD $PATH_URL"
+
 echo "$LOG_ENTRY" | tee -a "$LOG_FILE"
+
+RESPONSE="` sh funs.sh `"
 
 # Send HTTP Response to the Client (via Socat)
 echo -e "HTTP/1.1 200 OK"
 echo -e "Content-Type: text/plain"
 echo -e "Connection: close"
 echo -e ""
-echo -e "HTTPS Server running via Socat + Bash."
+echo -e "HTTP Server running via Socat + Bash."
+echo -e "${RESPONSE}"
 
